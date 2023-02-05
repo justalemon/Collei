@@ -2,7 +2,9 @@ import json
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
+from urllib.parse import urlparse
 
+from git import Repo, InvalidGitRepositoryError
 from jinja2 import Environment, FileSystemLoader
 
 PARAMETER_TYPES = {
@@ -10,6 +12,29 @@ PARAMETER_TYPES = {
     "str": str,
     "bool": bool
 }
+
+
+def get_git_params():
+    try:
+        path = Path.cwd()
+        repo = Repo(path)
+    except InvalidGitRepositoryError:
+        return {}
+
+    parameters = {}
+
+    for remote in repo.remotes:
+        url = remote.url.replace(".git", "")
+        parsed = urlparse(url)
+
+        if parsed.hostname == "github.com":
+            split = parsed.path.split("/")[1:]
+            parameters["github"] = {
+                "user": split[0],
+                "repo": split[1]
+            }
+
+    return parameters
 
 
 def parse_arguments():
@@ -95,12 +120,17 @@ def use_template(name: str):
         if parsed:
             parsed_parameters[identifier] = parsed
 
+    params = {
+        "input": parsed_parameters,
+        **get_git_params()
+    }
+
     cwd = Path.cwd()
     loader = FileSystemLoader(searchpath=template, encoding="utf-8")
     env = Environment(loader=loader)
     for template_name in env.list_templates(filter_func=lambda x: x.lower() != "template.json"):
         template = env.get_template(template_name)
-        render = template.render(input=parsed_parameters)
+        render = template.render(params)
 
         path = cwd / template_name
         path.write_text(render, encoding="utf-8")
