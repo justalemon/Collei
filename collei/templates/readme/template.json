@@ -1,0 +1,50 @@
+[
+    {
+        "id": "name",
+        "title": "Project Name",
+        "type": "str",
+        "default": null
+    },
+    {
+        "id": "description",
+        "title": "Project Description",
+        "type": "str",
+        "default": null
+    },
+    {
+        "id": "installation",
+        "title": "Installation Instructions",
+        "type": "str",
+        "default": null
+    },
+    {
+        "id": "usage",
+        "title": "Usage Instructions",
+        "type": "str",
+        "default": null
+    },
+    {
+        "id": "actions",
+        "title": "Show GitHub Actions Badge? (Requires GitHub repo)",
+        "type": "bool",
+        "default": true
+    },
+    {
+        "id": "patreon",
+        "title": "Patreon Username",
+        "type": "str",
+        "default": null
+    },
+    {
+        "id": "paypal",
+        "title": "PayPal.me Username",
+        "type": "str",
+        "default": null
+    },
+    {
+        "id": "discord",
+        "title": "Discord Invite Code",
+        "type": "str",
+        "default": ""
+    }
+]
