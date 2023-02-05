@@ -33,7 +33,8 @@ setup(
         "Programming Language :: Python :: Implementation :: CPython"
     ],
     install_requires=[
-        "Jinja2>=3.1.2,<4.0.0"
+        "Jinja2>=3.1.2,<4.0.0",
+        "GitPython>=3.1.30,<4.0.0"
     ],
     python_requires=">=3.8",
     package_data={
