@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 def parse_arguments():
     parser = ArgumentParser(prog="collei",
                             description="Lemon's modding tools")
-    subparser = parser.add_subparsers(help="the action to do")
+    subparser = parser.add_subparsers(help="the action to do", dest="action")
 
     return parser.parse_args()
 
