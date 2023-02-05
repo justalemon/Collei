@@ -38,7 +38,7 @@ setup(
     python_requires=">=3.8",
     package_data={
         "": [
-            "*.json"
+            "**/templates/**/*.*"
         ]
     },
     include_package_data=True
