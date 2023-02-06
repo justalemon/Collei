@@ -21,7 +21,7 @@
     <PackageReference Include="CitizenFX.Core.Client" Version="{{ input.fivem }}">
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>{% if input.json %}
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3">
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
       <ExcludeAssets>compile</ExcludeAssets>
       <GeneratePathProperty>true</GeneratePathProperty>
     </PackageReference>
