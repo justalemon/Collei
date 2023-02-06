@@ -84,6 +84,9 @@ def use_template(name: str):
         return 8
 
     parsed_parameters = {}
+    params = {
+        **get_git_params()
+    }
 
     for parameter in parameters:
         identifier = parameter["id"]
@@ -91,6 +94,20 @@ def use_template(name: str):
         type_name = parameter["type"]
         env_name = f"COLLEI_TEMPLATE_{name.upper()}_{identifier.upper()}"
         default = environ.get(env_name, None) or parameter["default"]
+
+        if default.startswith("TEMPLATE:"):
+            dict_path = default.replace("TEMPLATE:", "").split(".")
+
+            current = params
+
+            try:
+                for section in dict_path:
+                    current = current[section]
+            except KeyError:
+                pass
+            finally:
+                if not isinstance(current, dict):
+                    default = current
 
         answer = None
         formatted_default = format_default(default, type_name)
@@ -122,10 +139,7 @@ def use_template(name: str):
         if parsed:
             parsed_parameters[identifier] = parsed
 
-    params = {
-        "input": parsed_parameters,
-        **get_git_params()
-    }
+    params["input"] = parsed_parameters
 
     cwd = Path.cwd()
     loader = FileSystemLoader(searchpath=template, encoding="utf-8")
