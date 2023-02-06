@@ -1,6 +1,7 @@
 import json
 import sys
 from argparse import ArgumentParser
+from os import environ
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -88,7 +89,8 @@ def use_template(name: str):
         identifier = parameter["id"]
         title = parameter["title"]
         type_name = parameter["type"]
-        default = parameter["default"]
+        env_name = f"COLLEI_TEMPLATE_{name.upper()}_{identifier.upper()}"
+        default = environ.get(env_name, None) or parameter["default"]
 
         answer = None
         formatted_default = format_default(default, type_name)
