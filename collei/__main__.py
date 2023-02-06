@@ -172,7 +172,9 @@ def use_template(name: str):
         template = env.get_template(template_name)
         render = template.render(params)
 
-        path = cwd / template_name
+        name = env.from_string(template_name).render(params)
+
+        path = cwd / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(render, encoding="utf-8")
 
