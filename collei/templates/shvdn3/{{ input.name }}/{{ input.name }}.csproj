@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AssemblyName>{{ input.name }}</AssemblyName>
+    <DefineConstants>SHVDN3,CLIENT</DefineConstants>
+    <Version>0.0.1</Version>
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>..\bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ScriptHookVDotNet3" Version="{{ input.shvdn }}">
+      <IncludeAssets>compile</IncludeAssets>
+    </PackageReference>{% if input.json %}
+    <PackageReference Include="Newtonsoft.Json" Version="{{ nuget.latest('Newtonsoft.Json') }}" />{% endif %}{% if input.lemonui %}
+    <PackageReference Include="LemonUI.SHVDN3" Version="{{ nuget.latest('LemonUI.SHVDN3') }}">
+      <IncludeAssets>compile</IncludeAssets>
+    </PackageReference>{% endif %}
+    <Reference Include="System.Windows.Forms" />{% if input.json %}
+    <None Update="{{ input.name }}\**\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>{% endif %}
+  </ItemGroup>
+
+</Project>
