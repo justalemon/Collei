@@ -98,6 +98,9 @@ def use_template(name: str):
 
     parsed_parameters = {}
     params = {
+        "nuget": {
+            "latest": get_latest_nuget_package_version
+        },
         **get_git_params()
     }
 
