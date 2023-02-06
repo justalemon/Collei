@@ -124,6 +124,14 @@ def use_template(name: str):
             else:
                 if not isinstance(current, dict):
                     default = current
+        elif isinstance(default, str) and default.startswith("NUGET:"):
+            package_name = default.replace("NUGET:", "")
+            version = get_latest_nuget_package_version(package_name)
+
+            if not version:
+                return 9
+
+            default = version
 
         answer = None
         formatted_default = format_default(default, type_name)
