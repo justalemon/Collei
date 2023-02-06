@@ -111,7 +111,7 @@ def use_template(name: str):
         env_name = f"COLLEI_TEMPLATE_{name.upper()}_{identifier.upper()}"
         default = environ.get(env_name, None) or parameter["default"]
 
-        if default.startswith("TEMPLATE:"):
+        if isinstance(default, str) and default.startswith("TEMPLATE:"):
             dict_path = default.replace("TEMPLATE:", "").split(".")
 
             current = params
