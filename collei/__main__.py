@@ -149,6 +149,7 @@ def use_template(name: str):
         render = template.render(params)
 
         path = cwd / template_name
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(render, encoding="utf-8")
 
     return 0
