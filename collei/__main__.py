@@ -105,7 +105,7 @@ def use_template(name: str):
                     current = current[section]
             except KeyError:
                 pass
-            finally:
+            else:
                 if not isinstance(current, dict):
                     default = current
 
