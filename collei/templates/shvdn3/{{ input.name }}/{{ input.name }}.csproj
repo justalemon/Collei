@@ -25,6 +25,7 @@
     <PackageReference Include="LemonUI.SHVDN3" Version="{{ nuget.latest('LemonUI.SHVDN3') }}">
       <IncludeAssets>compile</IncludeAssets>
     </PackageReference>{% endif %}
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Windows.Forms" />{% if input.json %}
     <None Update="{{ input.name }}\**\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
