@@ -5,6 +5,7 @@ from os import environ
 from pathlib import Path
 from urllib.parse import urlparse
 
+import requests
 from git import Repo, InvalidGitRepositoryError
 from jinja2 import Environment, FileSystemLoader
 
@@ -36,6 +37,18 @@ def get_git_params():
             }
 
     return parameters
+
+
+def get_latest_nuget_package_version(name: str):
+    resp = requests.get(f"https://api.nuget.org/v3-flatcontainer/{name}/index.json")
+
+    if resp.ok:
+        data = resp.json()
+        versions = data["versions"]
+        return versions[-1]
+    else:
+        print(f"Couldn't fetch latest version of {name}: Code {resp.status_code}", file=sys.stderr)
+        return None
 
 
 def parse_arguments():
