@@ -1,0 +1,32 @@
+[
+    {
+        "id": "name",
+        "title": "Project Name",
+        "type": "str",
+        "default": "TEMPLATE:github.repo"
+    },
+    {
+        "id": "fivem",
+        "title": "CitizenFX.Core.Server version",
+        "type": "str",
+        "default": "NUGET:CitizenFX.Core.Server"
+    },
+    {
+        "id": "client",
+        "title": "Add client DLL to fxmanifest.lua?",
+        "type": "bool",
+        "default": true
+    },
+    {
+        "id": "json",
+        "title": "Add Newtonsoft.Json?",
+        "type": "bool",
+        "default": true
+    },
+    {
+        "id": "lemonui",
+        "title": "Add LemonUI for FiveM?",
+        "type": "bool",
+        "default": true
+    }
+]
