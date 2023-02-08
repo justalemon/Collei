@@ -124,7 +124,7 @@ def use_template(name: str):
                 for section in dict_path:
                     current = current[section]
             except KeyError:
-                pass
+                default = None
             else:
                 if not isinstance(current, dict):
                     default = current
