@@ -1,5 +1,6 @@
 import json
 import sys
+import uuid
 from argparse import ArgumentParser
 from os import environ
 from pathlib import Path
@@ -100,6 +101,9 @@ def use_template(name: str):
     params = {
         "nuget": {
             "latest": get_latest_nuget_package_version
+        },
+        "uuid": {
+            "random": lambda: str(uuid.uuid4())
         },
         **get_git_params()
     }
