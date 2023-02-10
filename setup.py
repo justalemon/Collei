@@ -38,6 +38,11 @@ setup(
         "requests>=2.28.2,<3.0.0"
     ],
     python_requires=">=3.8",
+    entry_points={
+        "console_scripts": [
+            "collei  = collei.__main__:main"
+        ]
+    },
     package_data={
         "": [
             "**/templates/**/*.*"
