@@ -1,0 +1,8 @@
+[
+    {
+        "id": "name",
+        "title": "Project Name",
+        "type": "str",
+        "default": "TEMPLATE:github.repo"
+    }
+]
