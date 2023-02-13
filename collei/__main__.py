@@ -10,7 +10,7 @@ def parse_arguments():
     subparser = parser.add_subparsers(help="the action to do", dest="action")
 
     template = subparser.add_parser("template", help="uses a template to create a project or file")
-    template.add_argument("name")
+    template.add_argument("name", help="the name of the template to use")
 
     return parser.parse_args()
 
