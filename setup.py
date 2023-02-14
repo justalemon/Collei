@@ -32,6 +32,7 @@ setup(
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: Implementation :: CPython"
     ],
+    license="MIT",
     install_requires=[
         "Jinja2>=3.1.2,<4.0.0",
         "GitPython>=3.1.30,<4.0.0",
