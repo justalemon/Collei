@@ -1,0 +1,57 @@
+name: Compile Mod
+on:
+  release:
+    types:
+      - created
+  push:
+  pull_request:
+
+jobs:
+  lint-and-compile:
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3.3.0
+      - uses: actions/setup-dotnet@v3.0.3
+        with:
+          dotnet-version: "7.0.x"
+      - run: dotnet restore {% raw %}${{ github.event.repository.name }}{% endraw %}.sln
+      - uses: justalemon/VersionPatcher@v0.5
+        with:
+          version: 0.0.1.{% raw %}${{ github.run_number }}{% endraw %}
+          use-tag: true
+          csproj-files: "**/**.csproj"
+      - working-directory: {% raw %}${{ env.GITHUB_WORKSPACE }}{% endraw %}
+        run: dotnet build {% raw %}${{ github.event.repository.name }}.sln -c ${{ matrix.configuration }}{% endraw %}
+      - uses: actions/upload-artifact@v3.1.2
+        with:
+          name: {% raw %}${{ github.event.repository.name }}.${{ matrix.configuration }}{% endraw %}
+          path: bin/{% raw %}${{ matrix.configuration }}{% endraw %}
+{% if input.publish %}  deploy:
+    runs-on: ubuntu-22.04
+    if: {% raw %}${{ github.event_name == 'release' }}{% endraw %}
+    needs:
+      - lint-and-compile
+    steps:
+      - uses: actions/checkout@v3.3.0
+      - uses: actions/setup-dotnet@v3.0.3
+        with:
+          dotnet-version: "7.0.x"
+      - uses: actions/download-artifact@v3.0.2
+        with:
+          name: {% raw %}${{ github.event.repository.name }}{% endraw %}.Release
+          path: bin/Release
+      - name: Repackage Files
+        run: 7z a {% raw %}${{ github.event.repository.name }}.zip ${{ github.workspace }}{% endraw %}/bin/Release/*
+      - run: dotnet nuget push "**/*.nupkg" -s 'https://api.nuget.org/v3/index.json' -k {% raw %}${{secrets.NUGET}}{% endraw %}
+      - uses: ncipollo/release-action@v1.12.0
+        with:
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: {% raw %}${{ github.event.repository.name }}{% endraw %}.zip
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true{% endif %}

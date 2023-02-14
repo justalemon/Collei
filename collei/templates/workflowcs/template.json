@@ -1,0 +1,8 @@
+[
+    {
+        "id": "publish",
+        "title": "Add publishing to NuGet?",
+        "type": "bool",
+        "default": true
+    }
+]
