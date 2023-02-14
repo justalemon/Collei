@@ -1,6 +1,7 @@
 import sys
 from argparse import ArgumentParser
 
+from .dependabot import INTERVALS, SERVICES, generate_dependabot_config
 from .template import use_template
 
 
@@ -12,6 +13,16 @@ def parse_arguments():
     template = subparser.add_parser("template", help="uses a template to create a project or file")
     template.add_argument("name", help="the name of the template to use")
 
+    dependabot = subparser.add_parser("dependabot", help="creates a dependabot configuration file")
+    dependabot.add_argument("--interval", help="the interval between updates", choices=INTERVALS,
+                            default="weekly")
+    dependabot.add_argument("--skip", help="skips specific supported ecosystems", choices=SERVICES,
+                            nargs="+")
+    dependabot.add_argument("--force", help="forces the generation of specific supported ecosystems", choices=SERVICES,
+                            nargs="+")
+    dependabot.add_argument("--verbose", help="show extra information", choices=SERVICES,
+                            nargs="+")
+
     return parser.parse_args()
 
 
@@ -20,6 +31,8 @@ def main():
 
     if args.action == "template":
         return use_template(args.name)
+    elif args.action == "dependabot":
+        return generate_dependabot_config(args.interval, args.skip or [], args.force or [], args.verbose)
 
     return 0
 
