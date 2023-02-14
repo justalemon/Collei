@@ -35,7 +35,8 @@ setup(
     install_requires=[
         "Jinja2>=3.1.2,<4.0.0",
         "GitPython>=3.1.30,<4.0.0",
-        "requests>=2.28.2,<3.0.0"
+        "requests>=2.28.2,<3.0.0",
+        "ruamel.yaml>=0.17.21,<1.0.0"
     ],
     python_requires=">=3.8",
     entry_points={
