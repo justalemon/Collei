@@ -159,7 +159,8 @@ def use_template(name: str):
 
     cwd = Path.cwd()
     loader = FileSystemLoader(searchpath=template, encoding="utf-8")
-    env = Environment(loader=loader)
+    env = Environment(loader=loader, keep_trailing_newline=True)
+
     for template_name in env.list_templates(filter_func=lambda x: x.lower() != "template.json"):
         template = env.get_template(template_name)
         render = template.render(params)
