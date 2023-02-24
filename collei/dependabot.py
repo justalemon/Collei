@@ -30,7 +30,7 @@ MATCHES = {
 SERVICES = [service for service, glob in MATCHES.items()]
 
 
-def generate_dependabot_config(interval: str, skip: list[str], force: list[str], verbose: bool):
+def generate_dependabot_config(interval: str, skip: list[str], force: list[str], verbose: bool, skip_labels: bool):
     path = Path.cwd()
 
     spec = {}
@@ -56,13 +56,22 @@ def generate_dependabot_config(interval: str, skip: list[str], force: list[str],
             if ecosystem in force and not valid:
                 print(f"Forced generation of configuration for Ecosystem {ecosystem}")
 
-            updates.append({
+            config = {
                 "package-ecosystem": ecosystem,
                 "directory": "/",
                 "schedule": {
                     "interval": interval
                 }
-            })
+            }
+
+            if not skip_labels:
+                config["labels"] = [
+                    "priority: p3 low",
+                    "status: acknowledged",
+                    "type: dependencies"
+                ]
+
+            updates.append(config)
 
             print(f"Added configuration for Ecosystem {ecosystem}")
         else:

@@ -20,6 +20,7 @@ def parse_arguments():
                             nargs="+")
     dependabot.add_argument("--force", help="forces the generation of specific supported ecosystems", choices=SERVICES,
                             nargs="+")
+    dependabot.add_argument("--no-labels", help="doesn't adds the labels", action="store_true")
     dependabot.add_argument("--verbose", help="show extra information", choices=SERVICES,
                             nargs="+")
 
@@ -32,7 +33,8 @@ def main():
     if args.action == "template":
         return use_template(args.name)
     elif args.action == "dependabot":
-        return generate_dependabot_config(args.interval, args.skip or [], args.force or [], args.verbose)
+        return generate_dependabot_config(args.interval, args.skip or [], args.force or [], args.verbose,
+                                          args.no_labels)
 
     return 0
 
