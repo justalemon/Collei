@@ -27,12 +27,14 @@
     </PackageReference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(PkgNewtonsoft_Json)\lib\portable-net40+sl5+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
-    </Reference>{% endif %}{% if input.lemonui %}
-    <PackageReference Include="LemonUI.FiveM" Version="{{ nuget.latest('LemonUI.FiveM') }}" />{% endif %}
+    </Reference>{% endif %}
     <Reference Include="Microsoft.CSharp" />{% if input.json %}
     <None Update="**/*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>{% endif %}
+    <None Update="fxmanifest.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
