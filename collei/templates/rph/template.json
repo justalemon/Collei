@@ -1,0 +1,26 @@
+[
+    {
+        "id": "name",
+        "title": "Project Name",
+        "type": "str",
+        "default": "TEMPLATE:github.repo"
+    },
+    {
+        "id": "rph",
+        "title": "RagePluginHook version",
+        "type": "str",
+        "default": "NUGET:RagePluginHook"
+    },
+    {
+        "id": "json",
+        "title": "Add Newtonsoft.Json?",
+        "type": "bool",
+        "default": true
+    },
+    {
+        "id": "lemonui",
+        "title": "Add LemonUI for RagePluginHook?",
+        "type": "bool",
+        "default": true
+    }
+]
