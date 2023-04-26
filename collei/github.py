@@ -234,7 +234,7 @@ def update_tags():
     labels_resp = get(f"https://api.github.com/repos/{repo_owner}/{repo_name}/labels", headers=headers)
 
     if not labels_resp.ok:
-        print(f"Repo does not appears to exist", file=sys.stderr)
+        print("Repo does not appears to exist", file=sys.stderr)
         return 5
 
     existing_labels = {x["name"]: x for x in labels_resp.json()}
@@ -276,7 +276,7 @@ def update_tags():
             }
 
             label_create = post(f"https://api.github.com/repos/{repo_owner}/{repo_name}/labels",
-                                 headers=headers, json=add)
+                                headers=headers, json=add)
             print(f"Create label {name} with code {label_create.status_code}")
 
     print("Done! Synchronized all labels!")

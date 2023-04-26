@@ -137,10 +137,10 @@ def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace:
 
         if n_format == "shvdn" or n_format == "cfxmono":
             if comment is not None:
-                file.write(f"        /// <summary>\n")
+                file.write("        /// <summary>\n")
                 for line in comment.splitlines():
                     file.write(f"        /// {line}\n")
-                file.write(f"        /// </summary>\n")
+                file.write("        /// </summary>\n")
 
             file.write(f"        {name} = {nhash},\n")
         elif n_format == "cfxlua":
@@ -173,7 +173,7 @@ def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace:
                 if parameters:
                     parameters = f", {parameters}"
                 file.write(f"    return Citizen.Invoke({nhash}{parameters})\n")
-                file.write(f"end\n\n")
+                file.write("end\n\n")
             else:
                 file.write(f"function {name}({parameters}) end\n\n")
 
