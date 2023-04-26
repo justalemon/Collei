@@ -125,10 +125,9 @@ def write_footer(file: TextIO, n_format: str):
 
 def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dict[str, str]], calls: bool,
                        comment: Optional[str]):
-
     name = format_lua_name(name)
 
-    if comment is not None:
+    if comment is not None and comment:
         for line in comment.splitlines():
             file.write(f"--- {line}\n")
 
@@ -162,7 +161,7 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
 
 def write_native(file: TextIO, data: dict, n_format: str, comments: bool, nhash: str, caller: bool):
     name = data["name"]
-    comment = data.get("comment", None)
+    comment = data.get("comment", "")
 
     if n_format == "shvdn" or n_format == "cfxmono":
         if comment is not None and comments:
