@@ -161,7 +161,7 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
 
 def write_native(file: TextIO, data: dict, n_format: str, comments: bool, nhash: str, caller: bool):
     name = data["name"]
-    comment = data.get("comment", "")
+    comment = data.get("comment", "") or data.get("description", "")
 
     if n_format == "shvdn" or n_format == "cfxmono":
         if comment is not None and comments:
