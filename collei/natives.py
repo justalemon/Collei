@@ -123,6 +123,54 @@ def write_footer(file: TextIO, n_format: str):
         file.write("}\n")
 
 
+def write_native(file: TextIO, data: dict, n_format: str, comments: bool, nhash: str, caller: bool):
+    name = data["name"]
+    comment = data.get("comment", None)
+
+    if n_format == "shvdn" or n_format == "cfxmono":
+        if comment is not None and comments:
+            file.write("        /// <summary>\n")
+            for line in comment.splitlines():
+                file.write(f"        /// {line}\n")
+            file.write("        /// </summary>\n")
+
+        file.write(f"        {name} = {nhash},\n")
+    elif n_format == "cfxlua":
+        parameter_names = []
+
+        if comment is not None and comments:
+            for line in comment.splitlines():
+                file.write(f"--- {line}\n")
+
+        for parameter in data["params"]:
+            param_name = parameter["name"]
+            param_desc = parameter.get("description", "")
+            param_type = LUA_EQUIVALENTS.get(parameter["type"], None) or parameter["type"]
+
+            if param_name in LUA_KEYWORDS:
+                param_name = f"_{param_name}"
+
+            if param_name in parameter_names:
+                param_name = f"{param_name}_{len(parameter_names)}"
+
+            if comments:
+                file.write(f"--- @param {param_name} {param_type} {param_desc}\n")
+
+            parameter_names.append(param_name)
+
+        name = format_lua_name(name)
+        parameters = ", ".join(parameter_names)
+
+        if caller:
+            file.write(f"function {name}({parameters})\n")
+            if parameters:
+                parameters = f", {parameters}"
+            file.write(f"    return Citizen.Invoke({nhash}{parameters})\n")
+            file.write("end\n\n")
+        else:
+            file.write(f"function {name}({parameters}) end\n\n")
+
+
 def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
     print(f"Writing native namespace {namespace}")
 
@@ -133,51 +181,7 @@ def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace:
             file.write(f"-- {namespace}\n\n")
 
     for nhash, data in natives.items():
-        name = data["name"]
-        comment = data.get("comment", None)
-
-        if n_format == "shvdn" or n_format == "cfxmono":
-            if comment is not None and comments:
-                file.write("        /// <summary>\n")
-                for line in comment.splitlines():
-                    file.write(f"        /// {line}\n")
-                file.write("        /// </summary>\n")
-
-            file.write(f"        {name} = {nhash},\n")
-        elif n_format == "cfxlua":
-            parameter_names = []
-
-            if comment is not None and comments:
-                for line in comment.splitlines():
-                    file.write(f"--- {line}\n")
-
-            for parameter in data["params"]:
-                param_name = parameter["name"]
-                param_desc = parameter.get("description", "")
-                param_type = LUA_EQUIVALENTS.get(parameter["type"], None) or parameter["type"]
-
-                if param_name in LUA_KEYWORDS:
-                    param_name = f"_{param_name}"
-
-                if param_name in parameter_names:
-                    param_name = f"{param_name}_{len(parameter_names)}"
-
-                if comments:
-                    file.write(f"--- @param {param_name} {param_type} {param_desc}\n")
-
-                parameter_names.append(param_name)
-
-            name = format_lua_name(name)
-            parameters = ", ".join(parameter_names)
-
-            if caller:
-                file.write(f"function {name}({parameters})\n")
-                if parameters:
-                    parameters = f", {parameters}"
-                file.write(f"    return Citizen.Invoke({nhash}{parameters})\n")
-                file.write("end\n\n")
-            else:
-                file.write(f"function {name}({parameters}) end\n\n")
+        write_native(file, data, n_format, comments, nhash, caller)
 
 
 def write_natives(path: Path, n_format: str, should_call: bool, all_natives: dict[str, dict], comments: bool):
