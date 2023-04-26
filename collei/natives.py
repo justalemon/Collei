@@ -169,7 +169,7 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
         file.write(f"function {name}({formatted_parameters}) end\n")
 
 
-def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
+def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
     print(f"Writing native namespace {namespace}")
 
     if comments:
@@ -205,6 +205,6 @@ def write_natives(path: str, n_format: str, lists: list[str], should_call: bool,
 
         for game, namespaces in natives.items():
             for namespace, ns_natives in namespaces.items():
-                write_native_namespace(file, n_format, should_call, namespace, ns_natives, comments)
+                write_namespace(file, n_format, should_call, namespace, ns_natives, comments)
 
         write_footer(file, n_format)
