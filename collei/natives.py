@@ -169,16 +169,6 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
         file.write(f"function {name}({formatted_parameters}) end\n")
 
 
-def write_native(file: TextIO, data: dict, n_format: str, comments: bool, nhash: str, caller: bool):
-    name = data["name"]
-    comment = data.get("comment", "") or data.get("description", "") if comments else None
-
-    if n_format == "shvdn" or n_format == "cfxmono":
-        write_cs_function(file, name, nhash, comment)
-    elif n_format == "cfxlua":
-        write_lua_function(file, name, nhash, data["params"], caller, comment)
-
-
 def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
     print(f"Writing native namespace {namespace}")
 
@@ -189,7 +179,13 @@ def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace:
             file.write(f"-- {namespace}\n\n")
 
     for nhash, data in natives.items():
-        write_native(file, data, n_format, comments, nhash, caller)
+        name = data["name"]
+        comment = data.get("comment", "") or data.get("description", "") if comments else None
+
+        if n_format == "shvdn" or n_format == "cfxmono":
+            write_cs_function(file, name, nhash, comment)
+        elif n_format == "cfxlua":
+            write_lua_function(file, name, nhash, data["params"], caller, comment)
 
 
 def write_natives(path: str, n_format: str, lists: list[str], should_call: bool, comments: bool):
