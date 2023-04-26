@@ -1,7 +1,7 @@
 import string
 import sys
 from pathlib import Path
-from typing import TextIO
+from typing import TextIO, Optional
 
 from requests import get
 
@@ -123,6 +123,43 @@ def write_footer(file: TextIO, n_format: str):
         file.write("}\n")
 
 
+def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dict[str, str]], calls: bool,
+                       comment: Optional[str]):
+
+    name = format_lua_name(name)
+
+    if comment is not None:
+        for line in comment.splitlines():
+            file.write(f"--- {line}\n")
+
+    parameter_names = []
+
+    for parameter in parameters:
+        param_name = parameter["name"]
+        param_desc = parameter.get("description", "")
+        param_type = LUA_EQUIVALENTS.get(parameter["type"], None) or parameter["type"]
+
+        if param_name in LUA_KEYWORDS:
+            param_name = f"_{param_name}"
+        if param_name in parameter_names:
+            param_name = f"{param_name}_{len(parameter_names)}"
+        if comment is not None:
+            file.write(f"--- @param {param_name} {param_type} {param_desc}\n")
+
+        parameter_names.append(param_name)
+
+    formatted_parameters = ", ".join(parameter_names)
+
+    if calls:
+        file.write(f"function {name}({formatted_parameters})\n")
+        if formatted_parameters:
+            formatted_parameters = f", {formatted_parameters}"
+        file.write(f"    return Citizen.Invoke({nhash}{formatted_parameters})\n")
+        file.write("end\n\n")
+    else:
+        file.write(f"function {name}({formatted_parameters}) end\n")
+
+
 def write_native(file: TextIO, data: dict, n_format: str, comments: bool, nhash: str, caller: bool):
     name = data["name"]
     comment = data.get("comment", None)
@@ -136,39 +173,7 @@ def write_native(file: TextIO, data: dict, n_format: str, comments: bool, nhash:
 
         file.write(f"        {name} = {nhash},\n")
     elif n_format == "cfxlua":
-        parameter_names = []
-
-        if comment is not None and comments:
-            for line in comment.splitlines():
-                file.write(f"--- {line}\n")
-
-        for parameter in data["params"]:
-            param_name = parameter["name"]
-            param_desc = parameter.get("description", "")
-            param_type = LUA_EQUIVALENTS.get(parameter["type"], None) or parameter["type"]
-
-            if param_name in LUA_KEYWORDS:
-                param_name = f"_{param_name}"
-
-            if param_name in parameter_names:
-                param_name = f"{param_name}_{len(parameter_names)}"
-
-            if comments:
-                file.write(f"--- @param {param_name} {param_type} {param_desc}\n")
-
-            parameter_names.append(param_name)
-
-        name = format_lua_name(name)
-        parameters = ", ".join(parameter_names)
-
-        if caller:
-            file.write(f"function {name}({parameters})\n")
-            if parameters:
-                parameters = f", {parameters}"
-            file.write(f"    return Citizen.Invoke({nhash}{parameters})\n")
-            file.write("end\n\n")
-        else:
-            file.write(f"function {name}({parameters}) end\n")
+        write_lua_function(file, name, nhash, data["params"], caller, comment if comments else None)
 
 
 def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
