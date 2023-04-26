@@ -123,20 +123,22 @@ def write_footer(file: TextIO, n_format: str):
         file.write("}\n")
 
 
-def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict):
+def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict,
+                           skip_comments: bool):
     print(f"Writing native namespace {namespace}")
 
-    if n_format == "shvdn" or n_format == "cfxmono":
-        file.write(f"        // {namespace}\n")
-    elif n_format == "cfxlua":
-        file.write(f"-- {namespace}\n\n")
+    if not skip_comments:
+        if n_format == "shvdn" or n_format == "cfxmono":
+            file.write(f"        // {namespace}\n")
+        elif n_format == "cfxlua":
+            file.write(f"-- {namespace}\n\n")
 
     for nhash, data in natives.items():
         name = data["name"]
         comment = data.get("comment", None)
 
         if n_format == "shvdn" or n_format == "cfxmono":
-            if comment is not None:
+            if comment is not None and not skip_comments:
                 file.write("        /// <summary>\n")
                 for line in comment.splitlines():
                     file.write(f"        /// {line}\n")
@@ -146,7 +148,7 @@ def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace:
         elif n_format == "cfxlua":
             parameter_names = []
 
-            if comment is not None:
+            if comment is not None and not skip_comments:
                 for line in comment.splitlines():
                     file.write(f"--- {line}\n")
 
@@ -161,7 +163,8 @@ def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace:
                 if param_name in parameter_names:
                     param_name = f"{param_name}_{len(parameter_names)}"
 
-                file.write(f"--- @param {param_name} {param_type} {param_desc}\n")
+                if not skip_comments:
+                    file.write(f"--- @param {param_name} {param_type} {param_desc}\n")
 
                 parameter_names.append(param_name)
 
@@ -178,7 +181,7 @@ def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace:
                 file.write(f"function {name}({parameters}) end\n\n")
 
 
-def write_natives(path: Path, n_format: str, should_call: bool, all_natives: dict[str, dict]):
+def write_natives(path: Path, n_format: str, should_call: bool, all_natives: dict[str, dict], skip_comments: bool):
     path.parent.mkdir(exist_ok=True)
 
     with open(path, "w", encoding="utf-8") as file:
@@ -186,12 +189,12 @@ def write_natives(path: Path, n_format: str, should_call: bool, all_natives: dic
 
         for game, namespaces in all_natives.items():
             for namespace, natives in namespaces.items():
-                write_native_namespace(file, n_format, should_call, namespace, natives)
+                write_native_namespace(file, n_format, should_call, namespace, natives, skip_comments)
 
         write_footer(file, n_format)
 
 
-def write_natives_to(path: str, n_format: str, lists: list[str], should_call: bool):
+def write_natives_to(path: str, n_format: str, lists: list[str], should_call: bool, skip_comments: bool):
     path = Path(path).absolute()
 
     print(f"Starting fetching of natives to {path} in format {n_format}")
@@ -201,4 +204,4 @@ def write_natives_to(path: str, n_format: str, lists: list[str], should_call: bo
     if natives is None:
         return 1
 
-    write_natives(path, n_format, should_call, natives)
+    write_natives(path, n_format, should_call, natives, skip_comments)
