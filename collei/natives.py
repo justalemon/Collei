@@ -123,6 +123,16 @@ def write_footer(file: TextIO, n_format: str):
         file.write("}\n")
 
 
+def write_cs_function(file: TextIO, name: str, nhash: str, comment: Optional[str]):
+    if comment is not None and comment:
+        file.write("        /// <summary>\n")
+        for line in comment.splitlines():
+            file.write(f"        /// {line}\n")
+        file.write("        /// </summary>\n")
+
+    file.write(f"        {name} = {nhash},\n")
+
+
 def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dict[str, str]], calls: bool,
                        comment: Optional[str]):
     name = format_lua_name(name)
@@ -161,18 +171,12 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
 
 def write_native(file: TextIO, data: dict, n_format: str, comments: bool, nhash: str, caller: bool):
     name = data["name"]
-    comment = data.get("comment", "") or data.get("description", "")
+    comment = data.get("comment", "") or data.get("description", "") if comments else None
 
     if n_format == "shvdn" or n_format == "cfxmono":
-        if comment is not None and comments:
-            file.write("        /// <summary>\n")
-            for line in comment.splitlines():
-                file.write(f"        /// {line}\n")
-            file.write("        /// </summary>\n")
-
-        file.write(f"        {name} = {nhash},\n")
+        write_cs_function(file, name, nhash, comment)
     elif n_format == "cfxlua":
-        write_lua_function(file, name, nhash, data["params"], caller, comment if comments else None)
+        write_lua_function(file, name, nhash, data["params"], caller, comment)
 
 
 def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
