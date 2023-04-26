@@ -1,6 +1,7 @@
 import sys
 from argparse import ArgumentParser
 
+from .natives import TYPES, NATIVES, write_natives_to
 from .dependabot import INTERVALS, SERVICES, generate_dependabot_config
 from .template import use_template
 
@@ -24,6 +25,16 @@ def parse_arguments():
     dependabot.add_argument("--verbose", help="show extra information", choices=SERVICES,
                             nargs="+")
 
+    natives = subparser.add_parser("natives", help="generator for native enums and stubs")
+    natives.add_argument("path",
+                         help="the path of the output file or directory")
+    natives.add_argument("format", choices=TYPES,
+                         help="the format of the file")
+    natives.add_argument("--lists", choices=list(NATIVES.keys()), nargs="+", default=["gtav"],
+                         help="the different lists of natives to add")
+    natives.add_argument("--call", action="store_true",
+                         help="if the functions should call the natives instead of being stubs")
+
     return parser.parse_args()
 
 
@@ -35,6 +46,8 @@ def main():
     elif args.action == "dependabot":
         return generate_dependabot_config(args.interval, args.skip or [], args.force or [], args.verbose,
                                           args.no_labels)
+    elif args.action == "natives":
+        return write_natives_to(args.path, args.format, args.lists, args.call)
 
     return 0
 
