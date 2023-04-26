@@ -135,8 +135,6 @@ def write_cs_function(file: TextIO, name: str, nhash: str, comment: Optional[str
 
 def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dict[str, str]], calls: bool,
                        comment: Optional[str]):
-    name = format_lua_name(name)
-
     if comment is not None and comment:
         for line in comment.splitlines():
             file.write(f"--- {line}\n")
@@ -185,7 +183,7 @@ def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, n
         if n_format == "shvdn" or n_format == "cfxmono":
             write_cs_function(file, name, nhash, comment)
         elif n_format == "cfxlua":
-            write_lua_function(file, name, nhash, data["params"], caller, comment)
+            write_lua_function(file, format_lua_name(name), nhash, data["params"], caller, comment)
 
 
 def write_natives(path: str, n_format: str, lists: list[str], should_call: bool, comments: bool):
