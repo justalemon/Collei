@@ -1,7 +1,7 @@
 import sys
 from argparse import ArgumentParser
 
-from .natives import TYPES, NATIVES, write_natives_to
+from .natives import TYPES, NATIVES, write_natives
 from .dependabot import INTERVALS, SERVICES, generate_dependabot_config
 from .template import use_template
 
@@ -49,7 +49,7 @@ def main():
         return generate_dependabot_config(args.interval, args.skip or [], args.force or [], args.verbose,
                                           args.no_labels)
     elif args.action == "natives":
-        return write_natives_to(args.path, args.format, args.lists, args.call, args.comments)
+        return write_natives(args.path, args.format, args.lists, args.call, args.comments)
 
     return 0
 

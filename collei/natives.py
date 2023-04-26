@@ -184,20 +184,7 @@ def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace:
         write_native(file, data, n_format, comments, nhash, caller)
 
 
-def write_natives(path: Path, n_format: str, should_call: bool, all_natives: dict[str, dict], comments: bool):
-    path.parent.mkdir(exist_ok=True)
-
-    with open(path, "w", encoding="utf-8") as file:
-        write_header(file, n_format)
-
-        for game, namespaces in all_natives.items():
-            for namespace, natives in namespaces.items():
-                write_native_namespace(file, n_format, should_call, namespace, natives, comments)
-
-        write_footer(file, n_format)
-
-
-def write_natives_to(path: str, n_format: str, lists: list[str], should_call: bool, comments: bool):
+def write_natives(path: str, n_format: str, lists: list[str], should_call: bool, comments: bool):
     path = Path(path).absolute()
 
     print(f"Starting fetching of natives to {path} in format {n_format}")
@@ -207,4 +194,13 @@ def write_natives_to(path: str, n_format: str, lists: list[str], should_call: bo
     if natives is None:
         return 1
 
-    write_natives(path, n_format, should_call, natives, comments)
+    path.parent.mkdir(exist_ok=True)
+
+    with open(path, "w", encoding="utf-8") as file:
+        write_header(file, n_format)
+
+        for game, namespaces in natives.items():
+            for namespace, ns_natives in namespaces.items():
+                write_native_namespace(file, n_format, should_call, namespace, ns_natives, comments)
+
+        write_footer(file, n_format)
