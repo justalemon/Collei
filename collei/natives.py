@@ -168,7 +168,7 @@ def write_native(file: TextIO, data: dict, n_format: str, comments: bool, nhash:
             file.write(f"    return Citizen.Invoke({nhash}{parameters})\n")
             file.write("end\n\n")
         else:
-            file.write(f"function {name}({parameters}) end\n\n")
+            file.write(f"function {name}({parameters}) end\n")
 
 
 def write_native_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
