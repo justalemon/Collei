@@ -173,6 +173,60 @@ def write_extras(file: TextIO, n_format: str):
 
     print("Writing extra functions")
 
+    # fxmanifest.lua declarations
+
+    write_lua_function(file, "fx_version", "0x0", [
+        {
+            "name": "version",
+            "type": "string",
+            "description": "The manifest version. This needs to be adamant, bodacious or cerulean."
+        }
+    ], False, "Sets a specific fxmanifest version.")
+    write_lua_function(file, "game", "0x0", [
+        {
+            "name": "game",
+            "type": "string",
+            "description": "The supported game. This needs to be common, gta4, gta5 or rdr3."
+        }
+    ], False, "Sets the game that this resource supports.")
+    write_lua_function(file, "games", "0x0", [
+        {
+            "name": "games",
+            "type": "table",
+            "description": "The supported game(s). This needs to be common, gta4, gta5 or rdr3."
+        }
+    ], False, "Sets the multiple games that this resource supports.")
+    write_lua_function(file, "client_script", "0x0", [
+        {
+            "name": "script",
+            "type": "string",
+            "description": "The script to load in the client."
+        }
+    ], False, "Sets a specific script to be loaded in the client.")
+    write_lua_function(file, "client_scripts", "0x0", [
+        {
+            "name": "scripts",
+            "type": "table",
+            "description": "The scripts to load in the client."
+        }
+    ], False, "Sets the specific scripts to be loaded in the client.")
+    write_lua_function(file, "server_script", "0x0", [
+        {
+            "name": "script",
+            "type": "string",
+            "description": "The script to load in the server."
+        }
+    ], False, "Sets a specific script to be loaded in the server.")
+    write_lua_function(file, "server_scripts", "0x0", [
+        {
+            "name": "scripts",
+            "type": "table",
+            "description": "The scripts to load in the server."
+        }
+    ], False, "Sets the specific scripts to be loaded in the server.")
+
+    # actual functions
+
     write_lua_function(file, "TriggerServerEvent", "0x0", [
         {
             "name": "name",
