@@ -167,6 +167,56 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
         file.write(f"function {name}({formatted_parameters}) end\n")
 
 
+def write_extras(file: TextIO, n_format: str):
+    if n_format != "cfxlua":
+        return
+
+    print("Writing extra functions")
+
+    write_lua_function(file, "TriggerServerEvent", "0x0", [
+        {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the event to trigger."
+        },
+        {
+            "name": "...",
+            "type": "any",
+            "description": "The data to send to the server event."
+        }
+    ], False, "Triggers a new networked server event.")
+    write_lua_function(file, "TriggerClientEvent", "0x0", [
+        {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the event to trigger."
+        },
+        {
+            "name": "playerId",
+            "type": "number",
+            "description": "The ID of the client to trigger. Setting this to -1 triggers every client."
+        },
+        {
+            "name": "...",
+            "type": "any",
+            "description": "The data to send to the client event."
+        }
+    ], False, "Triggers a new networked client event.")
+    write_lua_function(file, "RegisterNetEvent", "0x0", [
+        {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the event to be registered."
+        },
+        {
+            "name": "cb",
+            "type": "function",
+            "description": "The callback to trigger when the event is called."
+        }
+    ], False, "Registers an event as a network event.")
+    write_lua_function(file, "GetPlayers", "0x0", [], False, "Gets a table with all of the active player IDs.")
+
+
 def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
     print(f"Writing native namespace {namespace}")
 
@@ -186,7 +236,8 @@ def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, n
             write_lua_function(file, format_lua_name(name), nhash, data["params"], caller, comment)
 
 
-def write_natives(path: str, n_format: str, lists: list[str], should_call: bool, comments: bool):
+def write_natives(path: str, n_format: str, lists: list[str], should_call: bool, comments: bool,
+                  no_extras: bool):
     path = Path(path).absolute()
 
     print(f"Starting fetching of natives to {path} in format {n_format}")
@@ -204,5 +255,8 @@ def write_natives(path: str, n_format: str, lists: list[str], should_call: bool,
         for game, namespaces in natives.items():
             for namespace, ns_natives in namespaces.items():
                 write_namespace(file, n_format, should_call, namespace, ns_natives, comments)
+
+        if not no_extras:
+            write_extras(file, n_format)
 
         write_footer(file, n_format)

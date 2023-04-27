@@ -36,6 +36,8 @@ def parse_arguments():
                          help="if the functions should call the natives instead of being stubs")
     natives.add_argument("--comments", action="store_true",
                          help="whether comments with the native documentation should be appended")
+    natives.add_argument("--no-extras", action="store_true",
+                         help="whether comments with the native documentation should be appended")
 
     return parser.parse_args()
 
@@ -49,7 +51,7 @@ def main():
         return generate_dependabot_config(args.interval, args.skip or [], args.force or [], args.verbose,
                                           args.no_labels)
     elif args.action == "natives":
-        return write_natives(args.path, args.format, args.lists, args.call, args.comments)
+        return write_natives(args.path, args.format, args.lists, args.call, args.comments, args.no_extras)
 
     return 0
 
