@@ -173,9 +173,13 @@ def write_extras(file: TextIO, n_format: str):
 
     print("Writing extra functions")
 
-    # fxmanifest.lua declarations
+    # dummy variables
 
     file.write("source = 0\n")
+    file.write("Citizen = {}\n")
+
+    # fxmanifest.lua declarations
+
     write_lua_function(file, "fx_version", "0x0", [
         {
             "name": "version",
@@ -270,6 +274,14 @@ def write_extras(file: TextIO, n_format: str):
         }
     ], False, "Registers an event as a network event.")
     write_lua_function(file, "GetPlayers", "0x0", [], False, "Gets a table with all of the active player IDs.")
+    write_lua_function(file, "Citizen.CreateThread", "0x0", [
+        {
+            "name": "func",
+            "type": "function",
+            "description": "The function to use to create a thread"
+        }
+    ], False, "Creates a new scope for code execution, each thread is a coroutine which will be executed "
+              "in a semi-consistent order.")
 
 
 def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
