@@ -174,8 +174,10 @@ def write_extras(file: TextIO, n_format: str):
     print("Writing extra functions")
 
     # dummy variables
+    # TODO: Add propper definition of the exports table
 
     file.write("source = 0\n")
+    file.write("exports = {}\n")
     file.write("Citizen = {}\n")
 
     # fxmanifest.lua declarations
