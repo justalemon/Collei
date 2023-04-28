@@ -175,6 +175,7 @@ def write_extras(file: TextIO, n_format: str):
 
     # fxmanifest.lua declarations
 
+    file.write("source = 0\n")
     write_lua_function(file, "fx_version", "0x0", [
         {
             "name": "version",
