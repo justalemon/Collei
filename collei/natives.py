@@ -134,8 +134,8 @@ def write_cs_function(file: TextIO, name: str, nhash: str, comment: Optional[str
 
 
 def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dict[str, str]], calls: bool,
-                       comment: Optional[str]):
-    if comment is not None and comment:
+                       comments: bool, comment: Optional[str]):
+    if comment and comments:
         for line in comment.splitlines():
             file.write(f"--- {line}\n")
 
@@ -150,7 +150,8 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
             param_name = f"_{param_name}"
         if param_name in parameter_names:
             param_name = f"{param_name}_{len(parameter_names)}"
-        if comment is not None:
+
+        if comments:
             file.write(f"--- @param {param_name} {param_type} {param_desc}\n")
 
         parameter_names.append(param_name)
@@ -167,7 +168,7 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
         file.write(f"function {name}({formatted_parameters}) end\n")
 
 
-def write_extras(file: TextIO, n_format: str):
+def write_extras(file: TextIO, n_format: str, comments: bool):
     if n_format != "cfxlua":
         return
 
@@ -188,49 +189,49 @@ def write_extras(file: TextIO, n_format: str):
             "type": "string",
             "description": "The manifest version. This needs to be adamant, bodacious or cerulean."
         }
-    ], False, "Sets a specific fxmanifest version.")
+    ], False, comments, "Sets a specific fxmanifest version.")
     write_lua_function(file, "game", "0x0", [
         {
             "name": "game",
             "type": "string",
             "description": "The supported game. This needs to be common, gta4, gta5 or rdr3."
         }
-    ], False, "Sets the game that this resource supports.")
+    ], False, comments, "Sets the game that this resource supports.")
     write_lua_function(file, "games", "0x0", [
         {
             "name": "games",
             "type": "table",
             "description": "The supported game(s). This needs to be common, gta4, gta5 or rdr3."
         }
-    ], False, "Sets the multiple games that this resource supports.")
+    ], False, comments, "Sets the multiple games that this resource supports.")
     write_lua_function(file, "client_script", "0x0", [
         {
             "name": "script",
             "type": "string",
             "description": "The script to load in the client."
         }
-    ], False, "Sets a specific script to be loaded in the client.")
+    ], False, comments, "Sets a specific script to be loaded in the client.")
     write_lua_function(file, "client_scripts", "0x0", [
         {
             "name": "scripts",
             "type": "table",
             "description": "The scripts to load in the client."
         }
-    ], False, "Sets the specific scripts to be loaded in the client.")
+    ], False, comments, "Sets the specific scripts to be loaded in the client.")
     write_lua_function(file, "server_script", "0x0", [
         {
             "name": "script",
             "type": "string",
             "description": "The script to load in the server."
         }
-    ], False, "Sets a specific script to be loaded in the server.")
+    ], False, comments, "Sets a specific script to be loaded in the server.")
     write_lua_function(file, "server_scripts", "0x0", [
         {
             "name": "scripts",
             "type": "table",
             "description": "The scripts to load in the server."
         }
-    ], False, "Sets the specific scripts to be loaded in the server.")
+    ], False, comments, "Sets the specific scripts to be loaded in the server.")
 
     # actual functions
 
@@ -245,7 +246,7 @@ def write_extras(file: TextIO, n_format: str):
             "type": "any",
             "description": "The data to send to the server event."
         }
-    ], False, "Triggers a new networked server event.")
+    ], False, comments, "Triggers a new networked server event.")
     write_lua_function(file, "TriggerClientEvent", "0x0", [
         {
             "name": "name",
@@ -262,7 +263,7 @@ def write_extras(file: TextIO, n_format: str):
             "type": "any",
             "description": "The data to send to the client event."
         }
-    ], False, "Triggers a new networked client event.")
+    ], False, comments, "Triggers a new networked client event.")
     write_lua_function(file, "RegisterNetEvent", "0x0", [
         {
             "name": "name",
@@ -274,16 +275,17 @@ def write_extras(file: TextIO, n_format: str):
             "type": "function",
             "description": "The callback to trigger when the event is called."
         }
-    ], False, "Registers an event as a network event.")
-    write_lua_function(file, "GetPlayers", "0x0", [], False, "Gets a table with all of the active player IDs.")
+    ], False, comments, "Registers an event as a network event.")
+    write_lua_function(file, "GetPlayers", "0x0", [
+    ], False, comments, "Gets a table with all of the active player IDs.")
     write_lua_function(file, "Citizen.CreateThread", "0x0", [
         {
             "name": "func",
             "type": "function",
             "description": "The function to use to create a thread"
         }
-    ], False, "Creates a new scope for code execution, each thread is a coroutine which will be executed "
-              "in a semi-consistent order.")
+    ], False, comments, "Creates a new scope for code execution, each thread is a coroutine which will be executed "
+                        "in a semi-consistent order.")
 
 
 def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
@@ -302,7 +304,7 @@ def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, n
         if n_format == "shvdn" or n_format == "cfxmono":
             write_cs_function(file, name, nhash, comment)
         elif n_format == "cfxlua":
-            write_lua_function(file, format_lua_name(name), nhash, data["params"], caller, comment)
+            write_lua_function(file, format_lua_name(name), nhash, data["params"], caller, comments, comment)
 
 
 def write_natives(path: str, n_format: str, lists: list[str], should_call: bool, comments: bool,
@@ -326,6 +328,6 @@ def write_natives(path: str, n_format: str, lists: list[str], should_call: bool,
                 write_namespace(file, n_format, should_call, namespace, ns_natives, comments)
 
         if not no_extras:
-            write_extras(file, n_format)
+            write_extras(file, n_format, comments)
 
         write_footer(file, n_format)
