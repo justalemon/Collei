@@ -37,7 +37,7 @@ def parse_arguments():
     natives.add_argument("--comments", action="store_true",
                          help="whether comments with the native documentation should be appended")
     natives.add_argument("--no-extras", action="store_true",
-                         help="whether comments with the native documentation should be appended")
+                         help="don't add the extra function declarations for the frameworks")
 
     return parser.parse_args()
 
