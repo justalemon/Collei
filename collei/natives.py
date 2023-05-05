@@ -5,16 +5,26 @@ from typing import TextIO, Optional
 
 from requests import get
 
-TYPES = [
-    "shvdn",
-    "cfxmono",
-    "cfxlua"
-]
 NATIVES = {
     "gtav": "https://raw.githubusercontent.com/alloc8or/gta5-nativedb-data/master/natives.json",
     "rdr3": "https://raw.githubusercontent.com/alloc8or/rdr3-nativedb-data/master/natives.json",
     "fivem": "https://runtime.fivem.net/doc/natives_cfx.json"
 }
+TYPES = {
+    "shvdn": {
+        "file": "Natives.cs",
+        "lists": ["gtav"]
+    },
+    "cfxmono": {
+        "file": "Natives.cs",
+        "lists": ["gtav", "fivem"]
+    },
+    "cfxlua": {
+        "file": "fivem.lua",
+        "lists": ["gtav", "fivem"]
+    }
+}
+
 LUA_EQUIVALENTS = {
     "int": "number",
     "const char*": "string",
@@ -309,7 +319,8 @@ def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, n
 
 def write_natives(path: str, n_format: str, lists: list[str], should_call: bool, comments: bool,
                   no_extras: bool):
-    path = Path(path).absolute()
+    lists = lists or TYPES[n_format]["lists"]
+    path = Path(path or TYPES[n_format]["file"]).absolute()
 
     print(f"Starting fetching of natives to {path} in format {n_format}")
 

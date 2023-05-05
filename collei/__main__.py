@@ -26,11 +26,11 @@ def parse_arguments():
                             nargs="+")
 
     natives = subparser.add_parser("natives", help="generator for native enums and stubs")
-    natives.add_argument("format", choices=list(NEW_TYPES.keys()),
+    natives.add_argument("format", choices=list(TYPES.keys()),
                          help="the format of the file")
     natives.add_argument("--file",
                          help="the path of the output file or directory")
-    natives.add_argument("--lists", choices=list(NATIVES.keys()), nargs="+", default=["gtav"],
+    natives.add_argument("--lists", choices=list(NATIVES.keys()), nargs="+",
                          help="the different lists of natives to add")
     natives.add_argument("--call", action="store_true",
                          help="if the functions should call the natives instead of being stubs")
