@@ -296,6 +296,25 @@ def write_extras(file: TextIO, n_format: str, comments: bool):
         }
     ], False, comments, "Creates a new scope for code execution, each thread is a coroutine which will be executed "
                         "in a semi-consistent order.")
+    write_lua_function(file, "Citizen.Wait", "0x0", [
+        {
+            "name": "milliseconds",
+            "type": "number",
+            "description": "The amount of milliseconds to pause the current thread."
+        }
+    ], False, comments, "Pauses the execution of the current thread for a specific amount of time.")
+    write_lua_function(file, "exports", "0x0", [
+        {
+            "name": "name",
+            "type": "string",
+            "description": "The name of the export to be registered."
+        },
+        {
+            "name": "func",
+            "type": "function",
+            "description": "The function that will be called for this export."
+        }
+    ], False, comments, "Registers an export.")
 
 
 def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
