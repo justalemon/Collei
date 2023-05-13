@@ -151,8 +151,11 @@ def write_cs_function(file: TextIO, name: str, nhash: str, comment: Optional[str
     file.write(f"        {name} = {nhash},\n")
 
 
-def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dict[str, str]], calls: bool,
-                       comments: bool, comment: Optional[str]):
+def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dict[str, str]],
+                       calls: bool, comments: bool, comment: str = None, return_type: str = None):
+    if not return_type:
+        return_type = "nil"
+
     if comment and comments:
         for line in comment.splitlines():
             file.write(f"--- {line}\n")
@@ -173,6 +176,8 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
             file.write(f"--- @param {param_name} {param_type} {param_desc}\n")
 
         parameter_names.append(param_name)
+
+    file.write(f"-- @return {return_type}\n")
 
     formatted_parameters = ", ".join(parameter_names)
 
@@ -356,7 +361,8 @@ def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, n
         if n_format == "shvdn" or n_format == "cfxmono":
             write_cs_function(file, name, nhash, comment)
         elif n_format == "cfxlua":
-            write_lua_function(file, format_lua_name(name), nhash, data["params"], caller, comments, comment)
+            write_lua_function(file, format_lua_name(name), nhash, data["params"], caller, comments, comment,
+                               LUA_EQUIVALENTS[data.get("return_type", None) or data.get("results", "void")])
 
 
 def write_natives(path: str, n_format: str, lists: list[str], should_call: bool, comments: bool,
