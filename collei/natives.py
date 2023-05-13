@@ -174,6 +174,8 @@ def write_lua_function(file: TextIO, name: str, nhash: str, parameters: list[dic
 
         if comments:
             file.write(f"--- @param {param_name} {param_type} {param_desc}\n")
+        else:
+            file.write(f"--- @param {param_name} {param_type}\n")
 
         parameter_names.append(param_name)
 
