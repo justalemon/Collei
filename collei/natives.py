@@ -26,6 +26,7 @@ TYPES = {
 }
 
 LUA_EQUIVALENTS = {
+    # C
     "int": "number",
     "const char*": "string",
     "Any*": "any",
@@ -61,7 +62,13 @@ LUA_EQUIVALENTS = {
     "long": "number",
     "bool": "boolean",
     "object": "any",
-    "void": "nil"
+    "void": "nil",
+    # Lua
+    "nil": "nil",
+    "number": "number",
+    "string": "string",
+    "function": "function",
+    "table": "table"
 }
 # From Lua Manual: 2.1 - Lexical Conventions
 LUA_KEYWORDS = [
