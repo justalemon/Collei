@@ -60,7 +60,8 @@ LUA_EQUIVALENTS = {
     "func": "function",
     "long": "number",
     "bool": "boolean",
-    "object": "any"
+    "object": "any",
+    "void": "nil"
 }
 # From Lua Manual: 2.1 - Lexical Conventions
 LUA_KEYWORDS = [
