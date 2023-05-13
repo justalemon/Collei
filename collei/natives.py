@@ -38,7 +38,7 @@ LUA_EQUIVALENTS = {
     "Entity": "number",
     "Vehicle": "number",
     "float*": "number",
-    "int*": "int",
+    "int*": "number",
     "Object": "any",
     "Cam": "number",
     "Player": "number",
