@@ -190,6 +190,7 @@ def write_extras(file: TextIO, n_format: str, comments: bool):
     file.write("source = 0\n")
     file.write("exports = {}\n")
     file.write("Citizen = {}\n")
+    file.write("json = {}\n")
 
     # fxmanifest.lua declarations
 
@@ -315,6 +316,20 @@ def write_extras(file: TextIO, n_format: str, comments: bool):
             "description": "The function that will be called for this export."
         }
     ], False, comments, "Registers an export.")
+    write_lua_function(file, "json.decode", "0x0", [
+        {
+            "name": "str",
+            "type": "string",
+            "description": "The JSON string."
+        }
+    ], False, comments, "Converts a JSON string into a Lua object.")
+    write_lua_function(file, "json.encode", "0x0", [
+        {
+            "name": "obj",
+            "type": "any",
+            "description": "The Lua object."
+        }
+    ], False, comments, "Converts a Lua object into a JSON string.")
 
 
 def write_namespace(file: TextIO, n_format: str, caller: bool, namespace: str, natives: dict, comments: bool):
