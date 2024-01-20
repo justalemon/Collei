@@ -1,5 +1,6 @@
 ﻿using GTA.UI;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -20,7 +21,9 @@ internal class Configuration
         ObjectCreationHandling = ObjectCreationHandling.Replace,
         Converters = [
             new StringEnumConverter()
-        ]
+        ],
+        Formatting = Formatting.Indented,
+        Culture = CultureInfo.InvariantCulture
     };
     
     #endregion
