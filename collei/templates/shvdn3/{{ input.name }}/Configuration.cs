@@ -39,7 +39,7 @@ internal class Configuration
     /// </summary>
     public void Save()
     {
-        string contents = JsonConvert.SerializeObject(this);
+        string contents = JsonConvert.SerializeObject(this, settings);
         File.WriteAllText(path, contents);
     }
     /// <summary>
