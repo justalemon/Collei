@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4.2.0
-      - uses: actions/setup-python@v5.1.1
+      - uses: actions/setup-python@v5.2.0
         with:
           python-version: 3.11
       - run: pip install -U pip setuptools flake8
@@ -24,7 +24,7 @@ jobs:
       - lint
     steps:
       - uses: actions/checkout@v4.2.0
-      - uses: actions/setup-python@v5.1.1
+      - uses: actions/setup-python@v5.2.0
         with:
           python-version: 3.11
       - run: pip install -U pip setuptools build
