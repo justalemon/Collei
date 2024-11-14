@@ -7,11 +7,11 @@ namespace {{ input.name }};
 public class {{ input.name }} : Script
 {
     #region Fields
-    
+
     private static readonly Configuration config = Configuration.Load();
-    
+
     #endregion
-    
+
     #region Constructors
 
     public {{ input.name }}()
@@ -19,10 +19,11 @@ public class {{ input.name }} : Script
         Tick += OnTick;
         KeyDown += OnKeyDown;
         KeyUp += OnKeyUp;
+        Aborted += OnAborted;
     }
-    
+
     #endregion
-    
+
     #region Event Functions
 
     private void OnTick(object sender, EventArgs e)
@@ -32,6 +33,9 @@ public class {{ input.name }} : Script
     {
     }
     private void OnKeyUp(object sender, KeyEventArgs e)
+    {
+    }
+    private void OnAborted(object sender, EventArgs e)
     {
     }
 
