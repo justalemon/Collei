@@ -1,0 +1,44 @@
+[
+    {
+        "id": "author",
+        "title": "Resource Author",
+        "type": "str",
+        "default": "Me"
+    },
+    {
+        "id": "description",
+        "title": "Resource Description",
+        "type": "str",
+        "default": "My Resource"
+    },
+    {
+        "id": "version",
+        "title": "Resource Version",
+        "type": "str",
+        "default": "1.0.0"
+    },
+    {
+        "id": "lib",
+        "title": "Include ox_lib in fxmanifest.lua?",
+        "type": "bool",
+        "default": true
+    },
+    {
+        "id": "sql",
+        "title": "Include oxmysql in fxmanifest.lua?",
+        "type": "bool",
+        "default": true
+    },
+    {
+        "id": "target",
+        "title": "Include ox_target in fxmanifest.lua?",
+        "type": "bool",
+        "default": true
+    },
+    {
+        "id": "inventory",
+        "title": "Include ox_inventory in fxmanifest.lua?",
+        "type": "bool",
+        "default": true
+    }
+]
