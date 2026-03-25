@@ -1,5 +1,9 @@
+function IsDebugEnabled()
+    return GetConvarInt(GetCurrentResourceName() .. "_debug", 0) ~= 0 or GetConvarInt("lemon_debug", 0) ~= 0
+end
+
 function Debug(...)
-    if GetConvarInt(GetCurrentResourceName() .. "_debug", 0) ~= 0 or GetConvarInt("lemon_debug", 0) ~= 0 then
+    if IsDebugEnabled() then
         print(...)
     end
 end
